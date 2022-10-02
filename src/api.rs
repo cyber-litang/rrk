@@ -36,7 +36,7 @@ pub fn batch_get_users(class: Option<&str>) -> Result<()> {
 
 pub fn clear_users() -> Result<()> {
     crate::accounts::delete_all_accounts()?;
-    tracing::info!("all users cleared");
+    println!("all users cleared");
     Ok(())
 }
 
@@ -57,8 +57,14 @@ pub fn sync_users() -> Result<()> {
         .filter(|id| !users_in_db.contains(*id))
         .cloned()
         .collect::<Vec<_>>();
-    tracing::info!(users_in_db = ?users_in_db, users_in_system = ?users_in_system);
-    tracing::info!(new_users = ?new_users, removed_users = ?removed_users);
+    println!(
+        "users_in_db = {:?}, users_in_system = {:?}",
+        users_in_db, users_in_system
+    );
+    println!(
+        "new_users = {:?}, removed_users = {:?}",
+        new_users, removed_users
+    );
     accounts::add_accounts(PREFIX, &new_users)?;
     accounts::delete_accounts(&removed_users)?;
     Ok(())

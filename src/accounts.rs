@@ -3,7 +3,6 @@ use std::{
     io::Write,
     process::{Command, Stdio},
 };
-use tracing::error;
 
 fn write_accounts<W: Write>(mut w: W, prefix: &str, ids: &[String]) -> Result<()> {
     for id in ids {
@@ -33,14 +32,11 @@ pub fn add_accounts(prefix: &str, ids: &[String]) -> Result<()> {
             .arg(format!("{prefix}/{id}"))
             .status()?;
         if !chmod.success() {
-            error!("chmod for {id} failed");
+            println!("chmod for {id} failed");
         }
-        let passwd = Command::new("passwd")
-            .arg("-e")
-            .arg(id)
-            .status()?;
+        let passwd = Command::new("passwd").arg("-e").arg(id).status()?;
         if !passwd.success() {
-            error!("set expire for {id} failed");
+            println!("set expire for {id} failed");
         }
     }
     Ok(())
@@ -88,12 +84,9 @@ pub fn get_all_accounts() -> Result<Vec<String>> {
 
 pub fn delete_accounts(ids: &[String]) -> Result<()> {
     for id in ids {
-        let status = Command::new("userdel")
-            .arg("-r")
-            .arg(id)
-            .status()?;
+        let status = Command::new("userdel").arg("-r").arg(id).status()?;
         if !status.success() {
-            error!("delete {} failed", id);
+            println!("delete {id} failed");
         }
     }
     Ok(())
@@ -101,7 +94,7 @@ pub fn delete_accounts(ids: &[String]) -> Result<()> {
 
 pub fn delete_all_accounts() -> Result<()> {
     let accounts = get_all_accounts()?;
-    tracing::info!(accounts = ?accounts);
+    println!("accounts {:?}", accounts);
     delete_accounts(&accounts)?;
     Ok(())
 }
