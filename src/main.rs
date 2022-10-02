@@ -18,7 +18,8 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-    /// batch add users
+    /// batch add users, line by line
+    /// line format: id:class
     Add {
         /// user file path
         #[clap(short, long, value_parser)]
