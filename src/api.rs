@@ -5,7 +5,7 @@ use std::{
     path::Path,
 };
 
-const PREFIX: &str = "/home/students";
+const PREFIX: &str = "/students";
 
 pub fn batch_add_users(path: &Path) -> Result<()> {
     let mut users: HashMap<String, Vec<_>> = HashMap::new();
